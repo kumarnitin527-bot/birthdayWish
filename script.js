@@ -18,16 +18,22 @@ const preloader = document.getElementById('preloader');
 const page1 = document.getElementById('page1');
 const page2 = document.getElementById('page2');
 const page3 = document.getElementById('page3');
+
 const giftBox = document.getElementById('giftBox');
 const countdownNum = document.getElementById('countdownNum');
+
 const blowBtn = document.getElementById('blowBtn');
 const letterBody = document.getElementById('letterBody');
+
 const magicBtn = document.getElementById('magicBtn');
 const wishResult = document.getElementById('wishResult');
+
 const prevReason = document.getElementById('prevReason');
 const nextReason = document.getElementById('nextReason');
+
 const musicToggle = document.getElementById('musicToggle');
 const bgMusic = document.getElementById('bgMusic');
+
 const particleCanvas = document.getElementById('particleCanvas');
 const fireworksContainer = document.getElementById('fireworksContainer');
 
@@ -36,7 +42,6 @@ const fireworksContainer = document.getElementById('fireworksContainer');
 const ctx = particleCanvas.getContext('2d');
 
 let particles = [];
-let animationId;
 
 function resizeCanvas() {
     particleCanvas.width = window.innerWidth;
@@ -44,7 +49,9 @@ function resizeCanvas() {
 }
 
 window.addEventListener('resize', resizeCanvas);
+
 resizeCanvas();
+
 
 class Particle {
 
@@ -55,28 +62,42 @@ class Particle {
     reset() {
         this.x = Math.random() * particleCanvas.width;
         this.y = Math.random() * particleCanvas.height;
+
         this.size = Math.random() * 2 + 0.5;
+
         this.speedX = (Math.random() - 0.5) * 0.5;
         this.speedY = (Math.random() - 0.5) * 0.5;
+
         this.opacity = Math.random() * 0.5 + 0.2;
-        this.color = `hsla(${340 + Math.random() * 40}, 80%, 65%, ${this.opacity})`;
+
+        this.color =
+            `hsla(${340 + Math.random() * 40}, 80%, 65%, ${this.opacity})`;
     }
 
     update() {
+
         this.x += this.speedX;
         this.y += this.speedY;
 
-        if (this.x < 0 || this.x > particleCanvas.width) {
+        if (
+            this.x < 0 ||
+            this.x > particleCanvas.width
+        ) {
             this.speedX *= -1;
         }
 
-        if (this.y < 0 || this.y > particleCanvas.height) {
+        if (
+            this.y < 0 ||
+            this.y > particleCanvas.height
+        ) {
             this.speedY *= -1;
         }
     }
 
     draw() {
+
         ctx.beginPath();
+
         ctx.arc(
             this.x,
             this.y,
@@ -86,9 +107,11 @@ class Particle {
         );
 
         ctx.fillStyle = this.color;
+
         ctx.fill();
     }
 }
+
 
 function initParticles() {
 
@@ -99,6 +122,7 @@ function initParticles() {
     }
 }
 
+
 function animateParticles() {
 
     ctx.clearRect(
@@ -108,29 +132,35 @@ function animateParticles() {
         particleCanvas.height
     );
 
-    particles.forEach(p => {
-        p.update();
-        p.draw();
+    particles.forEach(particle => {
+
+        particle.update();
+        particle.draw();
+
     });
+
 
     // Draw connections
     for (let i = 0; i < particles.length; i++) {
 
         for (let j = i + 1; j < particles.length; j++) {
 
-            const dx = particles[i].x - particles[j].x;
-            const dy = particles[i].y - particles[j].y;
+            const dx =
+                particles[i].x - particles[j].x;
 
-            const dist = Math.sqrt(
-                dx * dx + dy * dy
-            );
+            const dy =
+                particles[i].y - particles[j].y;
 
-            if (dist < 100) {
+            const distance =
+                Math.sqrt(dx * dx + dy * dy);
+
+
+            if (distance < 100) {
 
                 ctx.beginPath();
 
                 ctx.strokeStyle =
-                    `rgba(255, 45, 85, ${0.1 * (1 - dist / 100)})`;
+                    `rgba(255, 45, 85, ${0.1 * (1 - distance / 100)})`;
 
                 ctx.lineWidth = 0.5;
 
@@ -149,14 +179,15 @@ function animateParticles() {
         }
     }
 
-    animationId = requestAnimationFrame(animateParticles);
+    requestAnimationFrame(animateParticles);
 }
+
 
 initParticles();
 animateParticles();
 
 
-// ===== STARS (PAGE 1) =====
+// ===== STARS =====
 function createStars() {
 
     const starsContainer =
@@ -166,7 +197,8 @@ function createStars() {
 
     for (let i = 0; i < 100; i++) {
 
-        const star = document.createElement('div');
+        const star =
+            document.createElement('div');
 
         star.classList.add('star');
 
@@ -185,6 +217,7 @@ function createStars() {
         starsContainer.appendChild(star);
     }
 }
+
 
 createStars();
 
@@ -208,7 +241,9 @@ function showPage(pageToShow) {
 
     document
         .querySelectorAll('.page')
-        .forEach(p => p.classList.remove('active'));
+        .forEach(page => {
+            page.classList.remove('active');
+        });
 
     pageToShow.classList.add('active');
 }
@@ -218,43 +253,50 @@ function showPage(pageToShow) {
 // GIFT BOX
 // =====================================================
 
-giftBox.addEventListener('click', () => {
+if (giftBox) {
 
-    // Start background music when user taps the gift
-    if (bgMusic) {
+    giftBox.addEventListener('click', () => {
 
-        bgMusic.volume = 0.7;
+        // Start music when the gift is tapped
+        if (bgMusic) {
 
-        bgMusic.play()
-            .then(() => {
+            bgMusic.volume = 0.7;
 
-                if (musicToggle) {
-                    musicToggle.classList.add('playing');
-                }
+            bgMusic.play()
+                .then(() => {
 
-            })
-            .catch(error => {
+                    if (musicToggle) {
+                        musicToggle.classList.add('playing');
+                    }
 
-                console.log(
-                    'Music could not start:',
-                    error
-                );
+                })
+                .catch(error => {
 
-            });
-    }
+                    console.log(
+                        'Music could not start:',
+                        error
+                    );
 
-    // Open gift
-    giftBox.classList.add('opened');
+                });
+        }
 
-    // Go to countdown
-    setTimeout(() => {
 
-        showPage(page2);
-        startCountdown();
+        // Open gift
+        giftBox.classList.add('opened');
 
-    }, 800);
 
-});
+        // Move to countdown
+        setTimeout(() => {
+
+            showPage(page2);
+
+            startCountdown();
+
+        }, 800);
+
+    });
+
+}
 
 
 // ===== COUNTDOWN =====
@@ -264,40 +306,50 @@ function startCountdown() {
 
     countdownNum.textContent = count;
 
-    const interval = setInterval(() => {
 
-        count--;
+    const interval =
+        setInterval(() => {
 
-        if (count > 0) {
+            count--;
 
-            countdownNum.textContent = count;
 
-            countdownNum.style.animation = 'none';
+            if (count > 0) {
 
-            void countdownNum.offsetWidth;
+                countdownNum.textContent = count;
 
-            countdownNum.style.animation =
-                'countPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                countdownNum.style.animation = 'none';
 
-        } else {
+                void countdownNum.offsetWidth;
 
-            clearInterval(interval);
+                countdownNum.style.animation =
+                    'countPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
 
-            countdownNum.innerHTML = '&#10084;';
+            }
 
-            setTimeout(() => {
 
-                showPage(page3);
-                initMainPage();
+            else {
 
-            }, 600);
-        }
+                clearInterval(interval);
 
-    }, 1000);
+                countdownNum.innerHTML =
+                    '&#10084;';
+
+
+                setTimeout(() => {
+
+                    showPage(page3);
+
+                    initMainPage();
+
+                }, 600);
+
+            }
+
+        }, 1000);
 }
 
 
-// ===== MAIN PAGE INITIALIZATION =====
+// ===== MAIN PAGE =====
 function initMainPage() {
 
     typeLetter();
@@ -312,14 +364,16 @@ function initMainPage() {
 }
 
 
-// ===== TYPING LOVE LETTER =====
+// ===== LOVE LETTER =====
 function typeLetter() {
 
-    const text = CONFIG.loveLetterText;
+    const text =
+        CONFIG.loveLetterText;
 
     let i = 0;
 
     letterBody.textContent = '';
+
 
     function type() {
 
@@ -334,6 +388,7 @@ function typeLetter() {
         }
     }
 
+
     setTimeout(type, 2000);
 }
 
@@ -341,31 +396,35 @@ function typeLetter() {
 // ===== BLOW CANDLES =====
 let candlesBlown = false;
 
+
 blowBtn.addEventListener('click', () => {
 
     if (candlesBlown) return;
 
     candlesBlown = true;
 
+
     const flames =
         document.querySelectorAll('.candle-flame');
 
-    flames.forEach((flame, i) => {
+
+    flames.forEach((flame, index) => {
 
         setTimeout(() => {
 
             flame.classList.add('blown');
 
-        }, i * 200);
+        }, index * 200);
 
     });
+
 
     blowBtn.innerHTML =
         'Wish Granted! &#10022;';
 
     blowBtn.classList.add('disabled');
 
-    // Celebration burst
+
     setTimeout(() => {
 
         launchFireworks();
@@ -387,6 +446,7 @@ function launchFireworks() {
         '#00d4aa'
     ];
 
+
     for (let burst = 0; burst < 5; burst++) {
 
         setTimeout(() => {
@@ -396,6 +456,7 @@ function launchFireworks() {
 
             const y =
                 Math.random() * 50 + 10;
+
 
             for (let i = 0; i < 30; i++) {
 
@@ -417,6 +478,7 @@ function launchFireworks() {
                         )
                     ];
 
+
                 const angle =
                     (Math.PI * 2 / 30) * i;
 
@@ -429,6 +491,7 @@ function launchFireworks() {
                 const ty =
                     Math.sin(angle) * velocity;
 
+
                 particle.style.setProperty(
                     '--tx',
                     tx + 'px'
@@ -439,15 +502,19 @@ function launchFireworks() {
                     ty + 'px'
                 );
 
+
                 particle.style.animation =
                     'fireworkBurst 1.2s ease-out forwards';
+
 
                 particle.style.transform =
                     `translate(${tx}px, ${ty}px)`;
 
+
                 fireworksContainer.appendChild(
                     particle
                 );
+
 
                 setTimeout(() => {
 
@@ -467,6 +534,7 @@ let currentReason = 0;
 const reasonCards =
     document.querySelectorAll('.reason-card');
 
+
 function showReason(index) {
 
     reasonCards.forEach(card => {
@@ -478,8 +546,15 @@ function showReason(index) {
 
     });
 
-    reasonCards[index].classList.add('active');
+
+    if (reasonCards[index]) {
+
+        reasonCards[index]
+            .classList.add('active');
+
+    }
 }
+
 
 nextReason.addEventListener('click', () => {
 
@@ -489,31 +564,39 @@ nextReason.addEventListener('click', () => {
     reasonCards[currentReason]
         .classList.remove('active');
 
+
     currentReason =
         (currentReason + 1) %
         reasonCards.length;
 
+
     showReason(currentReason);
 
 });
+
 
 prevReason.addEventListener('click', () => {
 
     reasonCards[currentReason]
         .classList.remove('active');
 
+
     currentReason =
         (currentReason - 1 +
             reasonCards.length) %
         reasonCards.length;
+
 
     showReason(currentReason);
 
 });
 
 
-// Auto-rotate reasons
+// Auto rotate
 setInterval(() => {
+
+    if (!reasonCards.length) return;
+
 
     reasonCards[currentReason]
         .classList.add('exit');
@@ -521,9 +604,11 @@ setInterval(() => {
     reasonCards[currentReason]
         .classList.remove('active');
 
+
     currentReason =
         (currentReason + 1) %
         reasonCards.length;
+
 
     showReason(currentReason);
 
@@ -533,21 +618,24 @@ setInterval(() => {
 // ===== WISH BUTTON =====
 let wishIndex = 0;
 
+
 magicBtn.addEventListener('click', () => {
 
     wishResult.innerHTML =
         CONFIG.wishResponses[wishIndex];
 
+
     wishResult.classList.add('visible');
+
 
     wishIndex =
         (wishIndex + 1) %
         CONFIG.wishResponses.length;
 
-    // Burst effect
+
     launchFireworks();
 
-    // Shake button
+
     magicBtn.style.animation = 'none';
 
     void magicBtn.offsetWidth;
@@ -558,30 +646,34 @@ magicBtn.addEventListener('click', () => {
 });
 
 
-// ===== INTERSECTION OBSERVER - TIMELINE =====
+// ===== TIMELINE OBSERVER =====
 function observeTimeline() {
 
     const timelineItems =
         document.querySelectorAll('.timeline-item');
 
+
     const observer =
-        new IntersectionObserver((entries) => {
+        new IntersectionObserver(
+            entries => {
 
-            entries.forEach(entry => {
+                entries.forEach(entry => {
 
-                if (entry.isIntersecting) {
+                    if (entry.isIntersecting) {
 
-                    entry.target.classList.add(
-                        'visible'
-                    );
+                        entry.target
+                            .classList.add('visible');
 
-                }
+                    }
 
-            });
+                });
 
-        }, {
-            threshold: 0.3
-        });
+            },
+            {
+                threshold: 0.3
+            }
+        );
+
 
     timelineItems.forEach(item => {
 
@@ -591,30 +683,34 @@ function observeTimeline() {
 }
 
 
-// ===== PHOTO GALLERY OBSERVER =====
+// ===== GALLERY OBSERVER =====
 function observeGallery() {
 
     const photoCards =
         document.querySelectorAll('.photo-card');
 
+
     const observer =
-        new IntersectionObserver((entries) => {
+        new IntersectionObserver(
+            entries => {
 
-            entries.forEach(entry => {
+                entries.forEach(entry => {
 
-                if (entry.isIntersecting) {
+                    if (entry.isIntersecting) {
 
-                    entry.target.classList.add(
-                        'visible'
-                    );
+                        entry.target
+                            .classList.add('visible');
 
-                }
+                    }
 
-            });
+                });
 
-        }, {
-            threshold: 0.2
-        });
+            },
+            {
+                threshold: 0.2
+            }
+        );
+
 
     photoCards.forEach(card => {
 
@@ -624,7 +720,7 @@ function observeGallery() {
 }
 
 
-// ===== SCROLL ANIMATIONS =====
+// ===== SECTION OBSERVER =====
 function observeSections() {
 
     const sections =
@@ -638,25 +734,30 @@ function observeSections() {
             '.final-section'
         );
 
+
     const observer =
-        new IntersectionObserver((entries) => {
+        new IntersectionObserver(
+            entries => {
 
-            entries.forEach(entry => {
+                entries.forEach(entry => {
 
-                if (entry.isIntersecting) {
+                    if (entry.isIntersecting) {
 
-                    entry.target.style.opacity = '1';
+                        entry.target.style.opacity = '1';
 
-                    entry.target.style.transform =
-                        'translateY(0)';
+                        entry.target.style.transform =
+                            'translateY(0)';
 
-                }
+                    }
 
-            });
+                });
 
-        }, {
-            threshold: 0.1
-        });
+            },
+            {
+                threshold: 0.1
+            }
+        );
+
 
     sections.forEach(section => {
 
@@ -675,19 +776,21 @@ function observeSections() {
 
 
 // =====================================================
-// BACKGROUND MUSIC TOGGLE
+// BACKGROUND MUSIC
 // =====================================================
 
-if (bgMusic && musicToggle) {
+if (musicToggle && bgMusic) {
 
     musicToggle.addEventListener('click', (event) => {
 
-        // Prevent anything else from happening
+        // Don't let the button trigger anything else
         event.stopPropagation();
+
 
         if (bgMusic.paused) {
 
             bgMusic.volume = 0.7;
+
 
             bgMusic.play()
                 .then(() => {
@@ -706,7 +809,10 @@ if (bgMusic && musicToggle) {
 
                 });
 
-        } else {
+        }
+
+
+        else {
 
             bgMusic.pause();
 
@@ -721,13 +827,14 @@ if (bgMusic && musicToggle) {
 }
 
 
-// ===== MOUSE TRAIL EFFECT =====
+// ===== MOUSE TRAIL =====
 document.addEventListener('mousemove', (e) => {
 
     if (Math.random() > 0.9) {
 
         const trail =
             document.createElement('div');
+
 
         trail.style.cssText = `
             position: fixed;
@@ -741,6 +848,7 @@ document.addEventListener('mousemove', (e) => {
             color: hsl(${Math.random() * 40 + 330}, 80%, 65%);
         `;
 
+
         trail.innerHTML = [
             '&#10022;',
             '&#10084;',
@@ -749,7 +857,9 @@ document.addEventListener('mousemove', (e) => {
             Math.floor(Math.random() * 3)
         ];
 
+
         document.body.appendChild(trail);
+
 
         requestAnimationFrame(() => {
 
@@ -759,6 +869,7 @@ document.addEventListener('mousemove', (e) => {
                 `translateY(-40px) scale(0) rotate(${Math.random() * 180}deg)`;
 
         });
+
 
         setTimeout(() => {
 
@@ -775,10 +886,12 @@ document.addEventListener('touchmove', (e) => {
 
     const touch = e.touches[0];
 
+
     if (Math.random() > 0.85) {
 
         const trail =
             document.createElement('div');
+
 
         trail.style.cssText = `
             position: fixed;
@@ -792,9 +905,13 @@ document.addEventListener('touchmove', (e) => {
             color: #ff2d55;
         `;
 
-        trail.innerHTML = '&#10084;';
+
+        trail.innerHTML =
+            '&#10084;';
+
 
         document.body.appendChild(trail);
+
 
         requestAnimationFrame(() => {
 
@@ -804,6 +921,7 @@ document.addEventListener('touchmove', (e) => {
                 'translateY(-30px) scale(0)';
 
         });
+
 
         setTimeout(() => {
 
