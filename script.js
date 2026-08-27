@@ -421,3 +421,32 @@ document.addEventListener('touchmove', (e) => {
         setTimeout(() => trail.remove(), 1100);
     }
 });
+
+// ===============================
+// Background Music
+// ===============================
+
+const bgMusic = document.getElementById("bgMusic");
+const musicToggle = document.getElementById("musicToggle");
+
+if (bgMusic && musicToggle) {
+
+    musicToggle.addEventListener("click", function () {
+
+        if (bgMusic.paused) {
+            bgMusic.play()
+                .then(() => {
+                    musicToggle.classList.add("playing");
+                })
+                .catch((error) => {
+                    console.log("Music could not be played:", error);
+                });
+
+        } else {
+            bgMusic.pause();
+            musicToggle.classList.remove("playing");
+        }
+
+    });
+
+}
