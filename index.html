@@ -3,64 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
+    <title>Happy Birthday My Love</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:wght@300;400;600;800&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Floating Hearts Background -->
-    <div class="hearts-container" id="heartsContainer"></div>
 
-    <!-- Landing Section -->
-    <section class="landing" id="landing">
-        <div class="envelope" id="envelope">
-            <div class="envelope-flap"></div>
-            <div class="envelope-body">
-                <p>Click to open</p>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="loader-heart">
+            <svg viewBox="0 0 32 29.6">
+                <path d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.1-9.3,16-12.1,16-21.2C32,3.8,28.2,0,23.6,0z"/>
+            </svg>
+        </div>
+        <p class="loader-text">Preparing something special...</p>
+    </div>
+
+    <!-- Canvas for Particles -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Page 1: Opening -->
+    <section class="page page-1 active" id="page1">
+        <div class="stars" id="stars"></div>
+        <div class="page1-content">
+            <div class="gift-box" id="giftBox">
+                <div class="gift-lid">
+                    <div class="gift-bow"></div>
+                </div>
+                <div class="gift-base"></div>
             </div>
+            <p class="tap-text">Tap the gift</p>
         </div>
     </section>
 
-    <!-- Main Birthday Section -->
-    <section class="birthday-section" id="birthdaySection">
-        <div class="confetti-container" id="confettiContainer"></div>
+    <!-- Page 2: Countdown Reveal -->
+    <section class="page page-2" id="page2">
+        <div class="countdown-container">
+            <div class="countdown-number" id="countdownNum">3</div>
+            <div class="countdown-ring"></div>
+        </div>
+    </section>
 
-        <div class="content">
-            <h1 class="title">Happy Birthday!</h1>
-            <h2 class="subtitle">To the most amazing person in my life</h2>
+    <!-- Page 3: Main Birthday -->
+    <section class="page page-3" id="page3">
+        <div class="fireworks-container" id="fireworksContainer"></div>
 
-            <div class="cake-container">
-                <div class="cake">
-                    <div class="candle">
-                        <div class="flame"></div>
+        <div class="main-content">
+            <!-- Hero -->
+            <div class="hero">
+                <div class="hero-glow"></div>
+                <h1 class="hero-title">
+                    <span class="letter" style="--delay: 0">H</span>
+                    <span class="letter" style="--delay: 1">a</span>
+                    <span class="letter" style="--delay: 2">p</span>
+                    <span class="letter" style="--delay: 3">p</span>
+                    <span class="letter" style="--delay: 4">y</span>
+                    <span class="letter space" style="--delay: 5">&nbsp;</span>
+                    <span class="letter" style="--delay: 6">B</span>
+                    <span class="letter" style="--delay: 7">i</span>
+                    <span class="letter" style="--delay: 8">r</span>
+                    <span class="letter" style="--delay: 9">t</span>
+                    <span class="letter" style="--delay: 10">h</span>
+                    <span class="letter" style="--delay: 11">d</span>
+                    <span class="letter" style="--delay: 12">a</span>
+                    <span class="letter" style="--delay: 13">y</span>
+                    <span class="letter" style="--delay: 14">!</span>
+                </h1>
+                <p class="hero-subtitle">To My Beautiful Girl</p>
+            </div>
+
+            <!-- Animated Cake Section -->
+            <div class="cake-section">
+                <div class="cake-3d">
+                    <div class="plate"></div>
+                    <div class="cake-tier tier-1">
+                        <div class="drip drip-1"></div>
+                        <div class="drip drip-2"></div>
+                        <div class="drip drip-3"></div>
+                        <div class="drip drip-4"></div>
                     </div>
-                    <div class="layer layer-top"></div>
-                    <div class="layer layer-middle"></div>
-                    <div class="layer layer-bottom"></div>
+                    <div class="cake-tier tier-2">
+                        <div class="drip drip-5"></div>
+                        <div class="drip drip-6"></div>
+                    </div>
+                    <div class="cake-tier tier-3"></div>
+                    <div class="candles">
+                        <div class="candle-item"><div class="candle-flame"></div></div>
+                        <div class="candle-item"><div class="candle-flame"></div></div>
+                        <div class="candle-item"><div class="candle-flame"></div></div>
+                    </div>
+                    <div class="cake-topper">&#10084;</div>
+                </div>
+                <button class="blow-btn" id="blowBtn">Blow the Candles</button>
+            </div>
+
+            <!-- Love Letter Section -->
+            <div class="letter-section">
+                <div class="letter-card">
+                    <div class="letter-stamp">&#10084;</div>
+                    <h3 class="letter-heading">My Dearest Love,</h3>
+                    <p class="letter-body" id="letterBody"></p>
+                    <p class="letter-sign">Forever Yours</p>
                 </div>
             </div>
 
-            <div class="message-box">
-                <p class="message" id="message"></p>
-            </div>
-
-            <div class="wishes">
-                <button class="wish-btn" id="wishBtn">Make a Wish</button>
-            </div>
-
-            <div class="photo-frame">
-                <div class="frame-border">
-                    <p class="frame-text">Our Beautiful Memories</p>
-                    <p class="frame-subtext">Place your favorite photo here</p>
+            <!-- Reasons Section -->
+            <div class="reasons-section">
+                <h2 class="section-title">Reasons I Love You</h2>
+                <div class="reasons-carousel" id="reasonsCarousel">
+                    <div class="reason-card active">
+                        <span class="reason-number">01</span>
+                        <p>Your smile lights up my entire world</p>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-number">02</span>
+                        <p>The way you laugh makes everything better</p>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-number">03</span>
+                        <p>You believe in me when I doubt myself</p>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-number">04</span>
+                        <p>Every moment with you feels like magic</p>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-number">05</span>
+                        <p>You make ordinary days extraordinary</p>
+                    </div>
+                    <div class="reason-card">
+                        <span class="reason-number">06</span>
+                        <p>Your kindness inspires me every single day</p>
+                    </div>
+                </div>
+                <div class="carousel-nav">
+                    <button class="nav-btn prev-btn" id="prevReason">&larr;</button>
+                    <button class="nav-btn next-btn" id="nextReason">&rarr;</button>
                 </div>
             </div>
 
-            <div class="footer-message">
-                <p>With all my love, forever and always</p>
-                <span class="heart-icon">&#10084;</span>
+            <!-- Timeline / Memories -->
+            <div class="memories-section">
+                <h2 class="section-title">Our Beautiful Journey</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">The Day We Met</span>
+                            <p>The moment that changed everything forever</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">First Date</span>
+                            <p>Butterflies, nervous laughs, and pure magic</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">First "I Love You"</span>
+                            <p>Three words that meant the whole world</p>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-content">
+                            <span class="timeline-date">Today</span>
+                            <p>Celebrating you, the love of my life</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Photo Gallery Section -->
+            <div class="gallery-section">
+                <h2 class="section-title">Us, Together</h2>
+                <p class="gallery-subtitle">Every picture tells our story</p>
+                <div class="gallery">
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <!-- Replace src with your actual photo -->
+                            <img src="photo1.jpg" alt="Our Memory 1">
+                        </div>
+                        <div class="photo-caption">
+                            <span class="caption-icon">&#10084;</span>
+                            <p>Where it all began</p>
+                        </div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <!-- Replace src with your actual photo -->
+                            <img src="photo2.jpg" alt="Our Memory 2">
+                        </div>
+                        <div class="photo-caption">
+                            <span class="caption-icon">&#10084;</span>
+                            <p>My favorite moment with you</p>
+                        </div>
+                    </div>
+                    <div class="photo-card">
+                        <div class="photo-frame">
+                            <!-- Replace src with your actual photo -->
+                            <img src="photo3.jpg" alt="Our Memory 3">
+                        </div>
+                        <div class="photo-caption">
+                            <span class="caption-icon">&#10084;</span>
+                            <p>Forever my person</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Wish Section -->
+            <div class="wish-section">
+                <div class="wish-card">
+                    <div class="wish-sparkles"></div>
+                    <h2>Make a Birthday Wish</h2>
+                    <p>Close your eyes and wish for something beautiful...</p>
+                    <button class="magic-btn" id="magicBtn">
+                        <span class="btn-text">Grant My Wish</span>
+                        <span class="btn-stars">&#10022; &#10022; &#10022;</span>
+                    </button>
+                    <div class="wish-result" id="wishResult"></div>
+                </div>
+            </div>
+
+            <!-- Final Section -->
+            <div class="final-section">
+                <div class="infinity-symbol">&#8734;</div>
+                <h2 class="final-title">Happy Birthday, My Everything</h2>
+                <p class="final-message">
+                    You are the reason I smile every day.<br>
+                    Here's to another year of adventures together.<br>
+                    I love you more than words could ever say.
+                </p>
+                <div class="heart-animation">
+                    <div class="heart-pulse"></div>
+                    <span>&#10084;</span>
+                </div>
             </div>
         </div>
     </section>
+
+    <!-- Background Music Toggle -->
+    <button class="music-toggle" id="musicToggle" title="Toggle Music">
+        <span class="music-icon">&#9835;</span>
+    </button>
 
     <script src="script.js"></script>
 </body>
