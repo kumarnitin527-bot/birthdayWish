@@ -250,48 +250,34 @@ function showPage(pageToShow) {
 
 
 // =====================================================
-// GIFT BOX
-// =====================================================
+// ===== GIFT BOX =====
 
 if (giftBox) {
 
     giftBox.addEventListener('click', () => {
 
-        // Start music when the gift is tapped
-        if (bgMusic) {
+        // Open the gift
+        giftBox.classList.add('opened');
 
+        // Start music after user interaction
+        if (bgMusic) {
             bgMusic.volume = 0.7;
 
             bgMusic.play()
                 .then(() => {
-
                     if (musicToggle) {
                         musicToggle.classList.add('playing');
                     }
-
                 })
-                .catch(error => {
-
-                    console.log(
-                        'Music could not start:',
-                        error
-                    );
-
+                .catch((error) => {
+                    console.log('Music could not start:', error);
                 });
         }
 
-
-        // Open gift
-        giftBox.classList.add('opened');
-
-
-        // Move to countdown
+        // Go to countdown
         setTimeout(() => {
-
             showPage(page2);
-
             startCountdown();
-
         }, 800);
 
     });
