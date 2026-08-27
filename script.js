@@ -26,6 +26,7 @@ const wishResult = document.getElementById('wishResult');
 const prevReason = document.getElementById('prevReason');
 const nextReason = document.getElementById('nextReason');
 const musicToggle = document.getElementById('musicToggle');
+const bgMusic = document.getElementById('bgMusic');
 const particleCanvas = document.getElementById('particleCanvas');
 const fireworksContainer = document.getElementById('fireworksContainer');
 
@@ -141,6 +142,18 @@ function showPage(pageToShow) {
 
 // Gift Box Click
 giftBox.addEventListener('click', () => {
+
+    // Start music when she taps the gift
+    if (bgMusic) {
+        bgMusic.play()
+            .then(() => {
+                musicToggle.classList.add('playing');
+            })
+            .catch((error) => {
+                console.log("Music could not start:", error);
+            });
+    }
+
     giftBox.classList.add('opened');
 
     setTimeout(() => {
@@ -346,6 +359,7 @@ function observeSections() {
             }
         });
     }, { threshold: 0.1 });
+    
 
     sections.forEach(section => {
         section.style.opacity = '0';
@@ -355,17 +369,17 @@ function observeSections() {
     });
 }
 
-// ===== MUSIC TOGGLE (Visual Only - No Audio File Needed) =====
-let musicPlaying = false;
+// // ===== MUSIC TOGGLE (Visual Only - No Audio File Needed) =====
+// let musicPlaying = false;
 
-musicToggle.addEventListener('click', () => {
-    musicPlaying = !musicPlaying;
-    musicToggle.classList.toggle('playing', musicPlaying);
+// musicToggle.addEventListener('click', () => {
+//     musicPlaying = !musicPlaying;
+//     musicToggle.classList.toggle('playing', musicPlaying);
 
-    // You can add an actual audio file here:
-    // const audio = new Audio('birthday-song.mp3');
-    // if (musicPlaying) audio.play(); else audio.pause();
-});
+//     // You can add an actual audio file here:
+//     // const audio = new Audio('birthday-song.mp3');
+//     // if (musicPlaying) audio.play(); else audio.pause();
+// });
 
 // ===== MOUSE TRAIL EFFECT =====
 document.addEventListener('mousemove', (e) => {
