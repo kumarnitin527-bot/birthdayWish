@@ -1,7 +1,16 @@
 // ===== CONFIGURATION =====
 const CONFIG = {
-    loveLetterText: `On this special day, I want you to know that you are the most incredible person I've ever met. Your kindness, your beauty, your spirit — everything about you takes my breath away. Every single day with you is a gift I never take for granted. I promise to love you deeper with every sunrise. Happy Birthday, my love. Here's to forever.`,
+    //loveLetterText: `On this special day, I want you to know that you are the most incredible person I've ever met. Your kindness, your beauty, your spirit — everything about you takes my breath away. Every single day with you is a gift I never take for granted. I promise to love you deeper with every sunrise. Happy Birthday, my love. Here's to forever.`,
+    loveLetterText: 'میری رومانہ ❤️
 
+میری پیاری رومانہ،
+تمہیں دل کی گہرائیوں سے سالگرہ مبارک! ❤️
+
+اللہ کرے تمہاری زندگی ہمیشہ خوشیوں، محبت اور سکون سے بھری رہے۔ تمہاری ہر دعا قبول ہو، ہر خواب پورا ہو اور تمہاری مسکراہٹ ہمیشہ یونہی قائم رہے۔ ✨
+
+تم میری زندگی کا ایک بہت خوبصورت حصہ ہو، اور میری دعا ہے کہ آنے والا ہر سال تمہارے لیے پہلے سے بھی زیادہ حسین ہو۔
+
+سالگرہ بہت بہت مبارک ہو، میری رومانہ! ❤️🌙',
     wishResponses: [
         "Your wish is already coming true... because you have my love forever &#10084;",
         "I wished the same thing — more moments with you &#10022;",
