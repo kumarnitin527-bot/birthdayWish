@@ -142,17 +142,13 @@ function showPage(pageToShow) {
 
 // Gift Box Click
 giftBox.addEventListener('click', () => {
+    giftBox.classList.add('opened');
 
-    // Start music when she taps the gift
-    if (bgMusic) {
-        bgMusic.play()
-            .then(() => {
-                musicToggle.classList.add('playing');
-            })
-            .catch((error) => {
-                console.log("Music could not start:", error);
-            });
-    }
+    setTimeout(() => {
+        showPage(page2);
+        startCountdown();
+    }, 800);
+});
 
     giftBox.classList.add('opened');
 
@@ -369,18 +365,6 @@ function observeSections() {
     });
 }
 
-// // ===== MUSIC TOGGLE (Visual Only - No Audio File Needed) =====
-// let musicPlaying = false;
-
-// musicToggle.addEventListener('click', () => {
-//     musicPlaying = !musicPlaying;
-//     musicToggle.classList.toggle('playing', musicPlaying);
-
-//     // You can add an actual audio file here:
-//     // const audio = new Audio('birthday-song.mp3');
-//     // if (musicPlaying) audio.play(); else audio.pause();
-// });
-
 // ===== MOUSE TRAIL EFFECT =====
 document.addEventListener('mousemove', (e) => {
     if (Math.random() > 0.9) {
@@ -437,28 +421,24 @@ document.addEventListener('touchmove', (e) => {
 });
 
 // ===============================
-// Background Music
+// BACKGROUND MUSIC
 // ===============================
-
-const bgMusic = document.getElementById("bgMusic");
-const musicToggle = document.getElementById("musicToggle");
 
 if (bgMusic && musicToggle) {
 
-    musicToggle.addEventListener("click", function () {
+    musicToggle.addEventListener('click', () => {
 
         if (bgMusic.paused) {
             bgMusic.play()
                 .then(() => {
-                    musicToggle.classList.add("playing");
+                    musicToggle.classList.add('playing');
                 })
-                .catch((error) => {
-                    console.log("Music could not be played:", error);
+                .catch(error => {
+                    console.error('Music playback failed:', error);
                 });
-
         } else {
             bgMusic.pause();
-            musicToggle.classList.remove("playing");
+            musicToggle.classList.remove('playing');
         }
 
     });
