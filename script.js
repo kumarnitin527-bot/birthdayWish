@@ -1,140 +1,423 @@
-// Birthday Messages - Customize these!
-const birthdayMessages = [
-    "Every moment with you feels like a beautiful dream. Happy Birthday, my love! You make my world brighter just by being in it.",
-    "You are my sunshine on cloudy days, my calm in every storm. Today, I celebrate the day the world was blessed with you.",
-    "Another year of your beautiful smile, your warm hugs, and your incredible love. I'm the luckiest person alive. Happy Birthday!",
-    "To the one who fills my life with joy and laughter - may this year bring you everything your beautiful heart desires.",
-    "Words can never express how much you mean to me. But today, I want you to know - you are my everything. Happy Birthday, gorgeous!",
-    "From the first moment I met you, I knew my life would never be the same. Thank you for being you. Happy Birthday, my love!"
-];
+// ===== CONFIGURATION =====
+const CONFIG = {
+    loveLetterText: `On this special day, I want you to know that you are the most incredible person I've ever met. Your kindness, your beauty, your spirit — everything about you takes my breath away. Every single day with you is a gift I never take for granted. I promise to love you deeper with every sunrise. Happy Birthday, my love. Here's to forever.`,
 
-// DOM Elements
-const landing = document.getElementById('landing');
-const envelope = document.getElementById('envelope');
-const birthdaySection = document.getElementById('birthdaySection');
-const heartsContainer = document.getElementById('heartsContainer');
-const confettiContainer = document.getElementById('confettiContainer');
-const messageEl = document.getElementById('message');
-const wishBtn = document.getElementById('wishBtn');
+    wishResponses: [
+        "Your wish is already coming true... because you have my love forever &#10084;",
+        "I wished the same thing — more moments with you &#10022;",
+        "The stars aligned the day you were born &#9733;",
+        "Every wish you make, I'll work to make it real &#10084;",
+        "You deserve all the magic in the world &#10022;",
+        "My biggest wish came true when I found you &#9733;"
+    ]
+};
 
-// Initialize
-let messageIndex = 0;
+// ===== DOM ELEMENTS =====
+const preloader = document.getElementById('preloader');
+const page1 = document.getElementById('page1');
+const page2 = document.getElementById('page2');
+const page3 = document.getElementById('page3');
+const giftBox = document.getElementById('giftBox');
+const countdownNum = document.getElementById('countdownNum');
+const blowBtn = document.getElementById('blowBtn');
+const letterBody = document.getElementById('letterBody');
+const magicBtn = document.getElementById('magicBtn');
+const wishResult = document.getElementById('wishResult');
+const prevReason = document.getElementById('prevReason');
+const nextReason = document.getElementById('nextReason');
+const musicToggle = document.getElementById('musicToggle');
+const particleCanvas = document.getElementById('particleCanvas');
+const fireworksContainer = document.getElementById('fireworksContainer');
 
-// Envelope Click Handler
-envelope.addEventListener('click', () => {
-    envelope.classList.add('opened');
+// ===== PARTICLE SYSTEM =====
+const ctx = particleCanvas.getContext('2d');
+let particles = [];
+let animationId;
 
-    setTimeout(() => {
-        landing.classList.add('hidden');
-        birthdaySection.classList.add('visible');
-        typeMessage(birthdayMessages[0]);
-        launchConfetti();
-    }, 600);
-});
+function resizeCanvas() {
+    particleCanvas.width = window.innerWidth;
+    particleCanvas.height = window.innerHeight;
+}
 
-// Typing Effect for Messages
-function typeMessage(text) {
-    messageEl.textContent = '';
-    let i = 0;
-    const speed = 40;
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-    function type() {
-        if (i < text.length) {
-            messageEl.textContent += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
+class Particle {
+    constructor() {
+        this.reset();
+    }
+
+    reset() {
+        this.x = Math.random() * particleCanvas.width;
+        this.y = Math.random() * particleCanvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = (Math.random() - 0.5) * 0.5;
+        this.opacity = Math.random() * 0.5 + 0.2;
+        this.color = `hsla(${340 + Math.random() * 40}, 80%, 65%, ${this.opacity})`;
+    }
+
+    update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > particleCanvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > particleCanvas.height) this.speedY *= -1;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+    }
+}
+
+function initParticles() {
+    particles = [];
+    for (let i = 0; i < 80; i++) {
+        particles.push(new Particle());
+    }
+}
+
+function animateParticles() {
+    ctx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
+    particles.forEach(p => {
+        p.update();
+        p.draw();
+    });
+
+    // Draw connections
+    for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 100) {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(255, 45, 85, ${0.1 * (1 - dist / 100)})`;
+                ctx.lineWidth = 0.5;
+                ctx.moveTo(particles[i].x, particles[i].y);
+                ctx.lineTo(particles[j].x, particles[j].y);
+                ctx.stroke();
+            }
         }
     }
 
-    type();
+    animationId = requestAnimationFrame(animateParticles);
 }
 
-// Wish Button - Cycle through messages
-wishBtn.addEventListener('click', () => {
-    messageIndex = (messageIndex + 1) % birthdayMessages.length;
-    typeMessage(birthdayMessages[messageIndex]);
-    launchConfetti();
-    createBurstHearts();
+initParticles();
+animateParticles();
+
+// ===== STARS (PAGE 1) =====
+function createStars() {
+    const starsContainer = document.getElementById('stars');
+    for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + '%';
+        star.style.top = Math.random() * 100 + '%';
+        star.style.animationDelay = Math.random() * 3 + 's';
+        star.style.animationDuration = (Math.random() * 2 + 1) + 's';
+        starsContainer.appendChild(star);
+    }
+}
+createStars();
+
+// ===== PRELOADER =====
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        preloader.classList.add('hidden');
+    }, 2000);
 });
 
-// Confetti Effect
-function launchConfetti() {
-    const colors = ['#ff6b9d', '#f78fb3', '#f8a5c2', '#ffeaa7', '#fdcb6e', '#74b9ff', '#a29bfe'];
+// ===== PAGE TRANSITIONS =====
+function showPage(pageToShow) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    pageToShow.classList.add('active');
+}
 
-    for (let i = 0; i < 80; i++) {
+// Gift Box Click
+giftBox.addEventListener('click', () => {
+    giftBox.classList.add('opened');
+
+    setTimeout(() => {
+        showPage(page2);
+        startCountdown();
+    }, 800);
+});
+
+// Countdown
+function startCountdown() {
+    let count = 3;
+    countdownNum.textContent = count;
+
+    const interval = setInterval(() => {
+        count--;
+        if (count > 0) {
+            countdownNum.textContent = count;
+            countdownNum.style.animation = 'none';
+            void countdownNum.offsetWidth; // Trigger reflow
+            countdownNum.style.animation = 'countPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+        } else {
+            clearInterval(interval);
+            countdownNum.textContent = '&#10084;';
+            countdownNum.innerHTML = '&#10084;';
+
+            setTimeout(() => {
+                showPage(page3);
+                initMainPage();
+            }, 600);
+        }
+    }, 1000);
+}
+
+// ===== MAIN PAGE INITIALIZATION =====
+function initMainPage() {
+    typeLetter();
+    launchFireworks();
+    observeTimeline();
+    observeGallery();
+    observeSections();
+}
+
+// ===== TYPING LOVE LETTER =====
+function typeLetter() {
+    const text = CONFIG.loveLetterText;
+    let i = 0;
+    letterBody.textContent = '';
+
+    function type() {
+        if (i < text.length) {
+            letterBody.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, 30);
+        }
+    }
+
+    // Delay start until letter section is likely in view or start immediately
+    setTimeout(type, 2000);
+}
+
+// ===== BLOW CANDLES =====
+let candlesBlown = false;
+
+blowBtn.addEventListener('click', () => {
+    if (candlesBlown) return;
+    candlesBlown = true;
+
+    const flames = document.querySelectorAll('.candle-flame');
+    flames.forEach((flame, i) => {
         setTimeout(() => {
-            const confetti = document.createElement('div');
-            confetti.classList.add('confetti');
-            confetti.style.left = Math.random() * 100 + '%';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.width = Math.random() * 10 + 5 + 'px';
-            confetti.style.height = Math.random() * 10 + 5 + 'px';
-            confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
-            confetti.style.animationDelay = Math.random() * 0.5 + 's';
-            confettiContainer.appendChild(confetti);
+            flame.classList.add('blown');
+        }, i * 200);
+    });
 
-            setTimeout(() => confetti.remove(), 4000);
-        }, i * 30);
+    blowBtn.textContent = 'Wish Granted! &#10022;';
+    blowBtn.innerHTML = 'Wish Granted! &#10022;';
+    blowBtn.classList.add('disabled');
+
+    // Celebration burst
+    setTimeout(() => launchFireworks(), 500);
+});
+
+// ===== FIREWORKS =====
+function launchFireworks() {
+    const colors = ['#ff2d55', '#ffd700', '#a855f7', '#6366f1', '#ff8fab', '#00d4aa'];
+
+    for (let burst = 0; burst < 5; burst++) {
+        setTimeout(() => {
+            const x = Math.random() * 80 + 10;
+            const y = Math.random() * 50 + 10;
+
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('firework');
+                particle.style.left = x + '%';
+                particle.style.top = y + '%';
+                particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                const angle = (Math.PI * 2 / 30) * i;
+                const velocity = 50 + Math.random() * 80;
+                const tx = Math.cos(angle) * velocity;
+                const ty = Math.sin(angle) * velocity;
+
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                particle.style.animation = `fireworkBurst 1.2s ease-out forwards`;
+                particle.style.transform = `translate(${tx}px, ${ty}px)`;
+
+                fireworksContainer.appendChild(particle);
+                setTimeout(() => particle.remove(), 1500);
+            }
+        }, burst * 400);
     }
 }
 
-// Floating Hearts Background
-function createFloatingHeart() {
-    const heart = document.createElement('div');
-    heart.classList.add('floating-heart');
-    heart.innerHTML = ['&#10084;', '&#10083;', '&#9829;'][Math.floor(Math.random() * 3)];
-    heart.style.left = Math.random() * 100 + '%';
-    heart.style.fontSize = Math.random() * 15 + 15 + 'px';
-    heart.style.color = `hsl(${340 + Math.random() * 30}, 80%, ${60 + Math.random() * 20}%)`;
-    heart.style.animationDuration = Math.random() * 4 + 4 + 's';
-    heart.style.animationDelay = Math.random() * 2 + 's';
-    heartsContainer.appendChild(heart);
+// ===== REASONS CAROUSEL =====
+let currentReason = 0;
+const reasonCards = document.querySelectorAll('.reason-card');
 
-    setTimeout(() => heart.remove(), 10000);
+function showReason(index) {
+    reasonCards.forEach(card => {
+        card.classList.remove('active', 'exit');
+    });
+
+    reasonCards[index].classList.add('active');
 }
 
-// Create hearts periodically
-setInterval(createFloatingHeart, 800);
+nextReason.addEventListener('click', () => {
+    reasonCards[currentReason].classList.add('exit');
+    reasonCards[currentReason].classList.remove('active');
+    currentReason = (currentReason + 1) % reasonCards.length;
+    showReason(currentReason);
+});
 
-// Burst Hearts on Wish
-function createBurstHearts() {
-    for (let i = 0; i < 15; i++) {
-        setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.classList.add('floating-heart');
-            heart.innerHTML = '&#10084;';
-            heart.style.left = 40 + Math.random() * 20 + '%';
-            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
-            heart.style.color = `hsl(${340 + Math.random() * 30}, 90%, ${60 + Math.random() * 20}%)`;
-            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
-            heartsContainer.appendChild(heart);
+prevReason.addEventListener('click', () => {
+    reasonCards[currentReason].classList.remove('active');
+    currentReason = (currentReason - 1 + reasonCards.length) % reasonCards.length;
+    showReason(currentReason);
+});
 
-            setTimeout(() => heart.remove(), 5000);
-        }, i * 100);
-    }
+// Auto-rotate reasons
+setInterval(() => {
+    reasonCards[currentReason].classList.add('exit');
+    reasonCards[currentReason].classList.remove('active');
+    currentReason = (currentReason + 1) % reasonCards.length;
+    showReason(currentReason);
+}, 5000);
+
+// ===== WISH BUTTON =====
+let wishIndex = 0;
+
+magicBtn.addEventListener('click', () => {
+    wishResult.innerHTML = CONFIG.wishResponses[wishIndex];
+    wishResult.classList.add('visible');
+    wishIndex = (wishIndex + 1) % CONFIG.wishResponses.length;
+
+    // Burst effect
+    launchFireworks();
+
+    // Shake button
+    magicBtn.style.animation = 'none';
+    void magicBtn.offsetWidth;
+    magicBtn.style.animation = 'gradientShift 3s ease infinite';
+});
+
+// ===== INTERSECTION OBSERVER (Timeline) =====
+function observeTimeline() {
+    const timelineItems = document.querySelectorAll('.timeline-item');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.3 });
+
+    timelineItems.forEach(item => observer.observe(item));
 }
 
-// Add sparkle cursor effect
+// ===== PHOTO GALLERY OBSERVER =====
+function observeGallery() {
+    const photoCards = document.querySelectorAll('.photo-card');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    photoCards.forEach(card => observer.observe(card));
+}
+
+// ===== SCROLL ANIMATIONS =====
+function observeSections() {
+    const sections = document.querySelectorAll('.cake-section, .letter-section, .reasons-section, .memories-section, .gallery-section, .wish-section, .final-section');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(50px)';
+        section.style.transition = 'all 1s ease';
+        observer.observe(section);
+    });
+}
+
+// ===== MUSIC TOGGLE (Visual Only - No Audio File Needed) =====
+let musicPlaying = false;
+
+musicToggle.addEventListener('click', () => {
+    musicPlaying = !musicPlaying;
+    musicToggle.classList.toggle('playing', musicPlaying);
+
+    // You can add an actual audio file here:
+    // const audio = new Audio('birthday-song.mp3');
+    // if (musicPlaying) audio.play(); else audio.pause();
+});
+
+// ===== MOUSE TRAIL EFFECT =====
 document.addEventListener('mousemove', (e) => {
-    if (Math.random() > 0.92) {
-        const sparkle = document.createElement('div');
-        sparkle.style.position = 'fixed';
-        sparkle.style.left = e.clientX + 'px';
-        sparkle.style.top = e.clientY + 'px';
-        sparkle.style.pointerEvents = 'none';
-        sparkle.style.fontSize = '12px';
-        sparkle.style.zIndex = '9999';
-        sparkle.style.transition = 'all 1s ease';
-        sparkle.style.opacity = '1';
-        sparkle.innerHTML = '&#10022;';
-        sparkle.style.color = `hsl(${Math.random() * 60 + 320}, 80%, 70%)`;
-        document.body.appendChild(sparkle);
+    if (Math.random() > 0.9) {
+        const trail = document.createElement('div');
+        trail.style.cssText = `
+            position: fixed;
+            left: ${e.clientX}px;
+            top: ${e.clientY}px;
+            pointer-events: none;
+            font-size: ${Math.random() * 12 + 8}px;
+            z-index: 9999;
+            opacity: 1;
+            transition: all 1.2s ease;
+            color: hsl(${Math.random() * 40 + 330}, 80%, 65%);
+        `;
+        trail.innerHTML = ['&#10022;', '&#10084;', '&#10038;'][Math.floor(Math.random() * 3)];
+        document.body.appendChild(trail);
 
-        setTimeout(() => {
-            sparkle.style.opacity = '0';
-            sparkle.style.transform = `translateY(-30px) scale(0)`;
-        }, 50);
+        requestAnimationFrame(() => {
+            trail.style.opacity = '0';
+            trail.style.transform = `translateY(-40px) scale(0) rotate(${Math.random() * 180}deg)`;
+        });
 
-        setTimeout(() => sparkle.remove(), 1100);
+        setTimeout(() => trail.remove(), 1300);
+    }
+});
+
+// ===== TOUCH SUPPORT =====
+document.addEventListener('touchmove', (e) => {
+    const touch = e.touches[0];
+    if (Math.random() > 0.85) {
+        const trail = document.createElement('div');
+        trail.style.cssText = `
+            position: fixed;
+            left: ${touch.clientX}px;
+            top: ${touch.clientY}px;
+            pointer-events: none;
+            font-size: 14px;
+            z-index: 9999;
+            opacity: 1;
+            transition: all 1s ease;
+            color: #ff2d55;
+        `;
+        trail.innerHTML = '&#10084;';
+        document.body.appendChild(trail);
+
+        requestAnimationFrame(() => {
+            trail.style.opacity = '0';
+            trail.style.transform = 'translateY(-30px) scale(0)';
+        });
+
+        setTimeout(() => trail.remove(), 1100);
     }
 });
