@@ -292,13 +292,18 @@ if (giftBox) {
         giftBox.classList.add("opened");
 
 
-        // Start music
+        // ===============================
+        // START BACKGROUND MUSIC
+        // ===============================
+
         if (bgMusic) {
 
             bgMusic.volume = 0.7;
 
             bgMusic.play()
                 .then(function () {
+
+                    console.log("Background music started.");
 
                     if (musicToggle) {
                         musicToggle.classList.add("playing");
@@ -307,7 +312,7 @@ if (giftBox) {
                 })
                 .catch(function (error) {
 
-                    console.log(
+                    console.error(
                         "Music could not start:",
                         error
                     );
@@ -903,7 +908,7 @@ function observeSections() {
 }
 
 
-// ===== BACKGROUND MUSIC =====
+// ===== BACKGROUND MUSIC TOGGLE =====
 
 if (musicToggle && bgMusic) {
 
